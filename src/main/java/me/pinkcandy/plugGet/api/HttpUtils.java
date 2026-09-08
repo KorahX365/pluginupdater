@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class HttpUtils {
 
-    private static final String USER_AGENT = "plug-get";
+    public static final String USER_AGENT = "KorahX365/pluginupdater/0.1.1 (https://github.com/KorahX365/pluginupdater)";
 
     public static String get(String urlStr) {
         HttpURLConnection conn = null;

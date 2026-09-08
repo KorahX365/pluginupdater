@@ -2,6 +2,7 @@ package me.pinkcandy.plugGet.download;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -36,7 +37,42 @@ public class FileDownloader {
                 Files.delete(targetFile);
             }
 
-            Files.copy(new URL(urlString).openStream(), targetFile);
+            HttpURLConnection conn = null;
+            try {
+                URL url = new URL(urlString);
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("User-Agent", me.pinkcandy.plugGet.api.HttpUtils.USER_AGENT);
+                conn.setConnectTimeout(15000);
+                conn.setReadTimeout(30000);
+                conn.setInstanceFollowRedirects(true);
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == 307 || responseCode == 308) {
+                    String redirectUrl = conn.getHeaderField("Location");
+                    if (redirectUrl != null) {
+                        conn.disconnect();
+                        url = new URL(redirectUrl);
+                        conn = (HttpURLConnection) url.openConnection();
+                        conn.setRequestMethod("GET");
+                        conn.setRequestProperty("User-Agent", me.pinkcandy.plugGet.api.HttpUtils.USER_AGENT);
+                        conn.setConnectTimeout(15000);
+                        conn.setReadTimeout(30000);
+                        responseCode = conn.getResponseCode();
+                    }
+                }
+
+                if (responseCode != HttpURLConnection.HTTP_OK) {
+                    sender.sendMessage("§cServer returned HTTP error " + responseCode + " for download.");
+                    return false;
+                }
+
+                try (java.io.InputStream in = conn.getInputStream()) {
+                    Files.copy(in, targetFile, StandardCopyOption.REPLACE_EXISTING);
+                }
+            } finally {
+                if (conn != null) conn.disconnect();
+            }
 
             return true;
 
