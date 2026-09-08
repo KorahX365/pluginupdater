@@ -155,8 +155,9 @@ public class CommandsHandler implements CommandExecutor {
         }
 
         if (subCommand.equals("list") || subCommand.equals("-Qs")) {
+            String listType = args.length > 1 ? args[1] : "all";
             ThreadManager.runAsync(() -> {
-                ListCommand.execute(sender,args[1]);
+                ListCommand.execute(sender, listType);
             });
             return true;
         }

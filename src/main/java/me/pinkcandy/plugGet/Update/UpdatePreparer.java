@@ -80,6 +80,7 @@ public class UpdatePreparer {
             ActionLock.release();
         };
         ActionLock.deny = () -> {
+            sender.sendMessage("§cUpdate cancelled.");
             ActionLock.release();
         };
         return true;

@@ -4,7 +4,7 @@
   <groupId>me.pinkcandy</groupId>
   <artifactId>plug-get</artifactId>
   <name>plug-get</name>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
   <build>
     <defaultGoal>clean package</defaultGoal>
     <resources>
@@ -45,6 +45,10 @@
     </plugins>
   </build>
   <repositories>
+    <repository>
+      <id>papermc-repo</id>
+      <url>https://repo.papermc.io/repository/maven-public/</url>
+    </repository>
     <repository>
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
