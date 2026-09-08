@@ -27,6 +27,7 @@ public class RecreateFiles {
         tmpFolder = PlugGet.instance.getDataFolder().toPath().resolve("tmp/");
         plugincCacheFolder = PlugGet.instance.getDataFolder().toPath().resolve("cache/plugins/");
         projectCacheFolder = PlugGet.instance.getDataFolder().toPath().resolve("cache/project/");
+        backupFolder = PlugGet.instance.getDataFolder().toPath().resolve("backups/");
         try {
             Files.createDirectories(dbFolder);
 
@@ -59,6 +60,7 @@ public class RecreateFiles {
             Files.createDirectories(tmpFolder);
             Files.createDirectories(plugincCacheFolder);
             Files.createDirectories(projectCacheFolder);
+            Files.createDirectories(backupFolder);
 
         } catch (Exception e) {
             e.printStackTrace();

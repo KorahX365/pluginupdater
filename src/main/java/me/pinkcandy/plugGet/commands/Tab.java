@@ -31,13 +31,13 @@ public class Tab implements TabCompleter {
                 List<String> sugs = Arrays.asList("search", "install", "update", "remove","autoremove", "reload", "help", "y", "n", "list", "versions", "release", "include", "exclude");
                 StringUtil.copyPartialMatches(args[0], sugs, suggestions);
             } else if (args.length == 2) {
-
                 if (args[0].equalsIgnoreCase("install") || args[0].equalsIgnoreCase("-S")) {
 
                 } else if (args[0].equalsIgnoreCase("search") || args[0].equalsIgnoreCase("-Ss")) {
 
                 } else if (args[0].equalsIgnoreCase("update") || args[0].equalsIgnoreCase("-Syu")) {
-
+                    List<String> sugs = DBManager.getAllInstalledSlugs();
+                    StringUtil.copyPartialMatches(args[1], sugs, suggestions);
                 } else if (args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("-Qs")) {
 
                 } else if (args[0].equalsIgnoreCase("versions") || args[0].equalsIgnoreCase("-Vs")) {
@@ -64,7 +64,8 @@ public class Tab implements TabCompleter {
                 } else if (args[0].equalsIgnoreCase("versions") || args[0].equalsIgnoreCase("-Vs")) {
 
                 } else if (args[0].equalsIgnoreCase("update") || args[0].equalsIgnoreCase("-Syu")) {
-
+                    List<String> sugs = DBManager.getAllInstalledSlugs();
+                    StringUtil.copyPartialMatches(args[1], sugs, suggestions);
                 }
             }
         }

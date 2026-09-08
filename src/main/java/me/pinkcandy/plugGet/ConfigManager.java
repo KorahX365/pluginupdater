@@ -28,6 +28,14 @@ public class ConfigManager {
     public static boolean cacheMetadata;
     public static boolean tmpVersions;
 
+    // [backups]
+    public static boolean backupsEnabled;
+    public static int backupRetentionDays;
+
+    // [notifications]
+    public static int checkIntervalHours;
+    public static boolean notifyOnJoin;
+
     public static void reload(PlugGet instance) {
         instance.saveDefaultConfig();
         instance.reloadConfig();
@@ -51,6 +59,14 @@ public class ConfigManager {
         cachePlugins = getBool(c, "cache.plugins", true, instance);
         cacheMetadata = getBool(c, "cache.metadata", true, instance);
         tmpVersions = getBool(c, "cache.tmp-versions", true, instance);
+
+        // [backups]
+        backupsEnabled = getBool(c, "backups.enabled", true, instance);
+        backupRetentionDays = getInt(c, "backups.retention-days", 7, instance);
+
+        // [notifications]
+        checkIntervalHours = getInt(c, "notifications.check-interval-hours", 12, instance);
+        notifyOnJoin = getBool(c, "notifications.notify-on-join", true, instance);
     }
 
     private static <E extends Enum<E>> E parseEnum(FileConfiguration c, String key, Class<E> type, E fallback, PlugGet plugin) {

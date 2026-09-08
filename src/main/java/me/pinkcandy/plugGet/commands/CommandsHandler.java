@@ -119,9 +119,10 @@ public class CommandsHandler implements CommandExecutor {
 
         if ((subCommand.equals("update") || subCommand.equals("-Syu"))){
             if (!ActionLock.isLocked && ActionLock.lockedBy == null) {
+                String targetSlug = (args.length > 1 && !args[1].startsWith("-")) ? args[1] : null;
                 ActionLock.lock(sender);
                 ThreadManager.runAsync(() -> {
-                    UpdatePreparer.execute(sender);
+                    UpdatePreparer.execute(sender, targetSlug);
                 });
             }
             else {

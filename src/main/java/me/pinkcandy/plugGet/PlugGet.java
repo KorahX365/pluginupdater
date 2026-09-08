@@ -24,6 +24,7 @@ public final class PlugGet extends JavaPlugin {
     public static Path tmpFolder;
     public static Path plugincCacheFolder;
     public static Path projectCacheFolder;
+    public static Path backupFolder;
 
 
     @Override
@@ -43,6 +44,7 @@ public final class PlugGet extends JavaPlugin {
 
             return getInstalledPluginsCount();
         }));
+        me.pinkcandy.plugGet.notifications.UpdateNotifier.init(this);
     }
 
     @Override

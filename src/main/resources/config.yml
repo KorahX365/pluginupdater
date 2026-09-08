@@ -22,3 +22,11 @@ cache:
   plugins: true
   metadata: true
   tmp-versions: true
+
+backups:
+  enabled: true
+  retention-days: 7
+
+notifications:
+  check-interval-hours: 12
+  notify-on-join: true

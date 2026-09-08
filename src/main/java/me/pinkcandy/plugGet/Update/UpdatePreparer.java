@@ -20,8 +20,24 @@ import java.util.List;
 
 public class UpdatePreparer {
     public static boolean execute(CommandSender sender) {
-        List<PluginData> pluginsInDB = DBManager.getInstalledPlugins();
-        sender.sendMessage("§8:: §7Fetching updates for §8" + pluginsInDB.size() + " §7plugins...");
+        return execute(sender, null);
+    }
+
+    public static boolean execute(CommandSender sender, String targetSlug) {
+        List<PluginData> pluginsInDB = new ArrayList<>();
+        if (targetSlug != null && !targetSlug.trim().isEmpty()) {
+            PluginData singleData = DBManager.getPluginData(targetSlug);
+            if (singleData == null) {
+                sender.sendMessage("§cPlugin " + targetSlug + " is not installed or registered in the database.");
+                ActionLock.release();
+                return false;
+            }
+            pluginsInDB.add(singleData);
+            sender.sendMessage("§8:: §7Checking updates for §8" + targetSlug + "§7...");
+        } else {
+            pluginsInDB = DBManager.getInstalledPlugins();
+            sender.sendMessage("§8:: §7Fetching updates for §8" + pluginsInDB.size() + " §7plugins...");
+        }
         List<PluginData> installedPlugins = new ArrayList<>();
         List<PluginData> pluginsToUpdate = new ArrayList<>();
         int excludedTotalCount = 0;
@@ -84,5 +100,29 @@ public class UpdatePreparer {
             ActionLock.release();
         };
         return true;
+    }
+
+    public static List<String> getAvailableUpdatesList() {
+        List<PluginData> pluginsInDB = DBManager.getInstalledPlugins();
+        List<String> updatableSlugs = new ArrayList<>();
+        for (PluginData pd : pluginsInDB) {
+            InstallInfo installInfo = pd.getInstallInfo();
+            if (DBManager.isPluginExcluded(installInfo.getSlug())) {
+                continue;
+            }
+            VersionInfo currentV = pd.getVersionInfo();
+            VersionInfo newestV = GetNewestVersion.getNewestVersionForInstallType(installInfo);
+            if (newestV == null) continue;
+
+            List<VersionInfo> versions = new ArrayList<>();
+            versions.add(newestV);
+            versions.add(currentV);
+            newestV = CompareDate.compare(versions);
+
+            if (newestV != null && !newestV.getVersionNumber().equals(currentV.getVersionNumber())) {
+                updatableSlugs.add(installInfo.getSlug());
+            }
+        }
+        return updatableSlugs;
     }
 }
